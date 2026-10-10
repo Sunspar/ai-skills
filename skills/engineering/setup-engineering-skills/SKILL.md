@@ -115,7 +115,12 @@ Then write the docs files using the seed templates in this skill folder as a sta
 - [domain.md](./domain.md) — domain doc consumer rules + layout
 
 For "other" issue trackers, write `docs/agents/issue-tracker.md` from scratch using the user's description.
+### 5. Agent-specific external directories.
 
-### 5. Done
+Some of the engineering skills require external directories exist, such as implement-spec. Ensure these folders exist. If they already exist, do nothing. If they do not already exist, create them empty.
+
+- `$HOME/agent-notes` - needed for any repository-external notes or files the agent needs to write (e.g for things like implement-spec).
+
+### 6. Done
 
 Tell the user the setup is complete and which engineering skills will now read from these files. Mention they can edit `docs/agents/*.md` directly later — re-running this skill is only necessary if they want to switch issue trackers or restart from scratch.
