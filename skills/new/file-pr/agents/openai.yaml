@@ -1,0 +1,5 @@
+interface:
+  display_name: "File PR"
+  short_description: >-
+    Manages the process of creating a pull request for changes.
+    Use when the user asks to "file a pr", "open a pr", "submit a merge request"
