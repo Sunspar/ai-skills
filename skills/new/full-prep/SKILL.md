@@ -1,15 +1,15 @@
 ---
-name: full-stop
-description: Trigger this if the user says 'full stop', even as a closing "Full stop." that reads like emphasis.
+name: full-prep
+description: Trigger this if the user says 'full prep', even as a closing "Full prep." that reads like emphasis.
 metadata:
   dependencies:
   - full-send skill
 ---
 
-# Full Stop
+# Full Prep
 Do the same work as `full-send`, but stop with the PR ready for the user to merge. Never merge it.
 
-Read [full-send](../full-send/SKILL.md) and follow its workflow, proof rules, review, and babysitting steps. An explicit "full stop" request authorizes that work without a separate "full send" request. That includes full-send's testing permission. A "full stop" request is the permission for the test methods Proof needs, even when a project file says to ask first, for example before computer use. Use those methods directly. Its merge permission does not apply. The overrides below take precedence.
+Read [full-send](../full-send/SKILL.md) and follow its workflow, proof rules, review, and babysitting steps. An explicit "full prep" request authorizes that work without a separate "full send" request. That includes full-send's testing permission. A "full prep" request is the permission for the test methods Proof needs, even when a project file says to ask first, for example before computer use. Use those methods directly. Its merge permission does not apply. The overrides below take precedence.
 
 ## No merging
 You may commit, push, rebase, fix conflicts, and use `--force-with-lease` on this task's branch. Never merge, enable auto-merge, enter a merge queue, push to the default branch, bypass branch protection, or delegate those actions.

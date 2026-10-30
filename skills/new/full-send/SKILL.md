@@ -76,3 +76,12 @@ Ask only when you cannot continue alone:
 Decide everything else yourself with sensible defaults, and list those decisions in the report.
 
 If no question tool is available, or the tool returns no answer, take the safe path: leave the PR open and unmerged, and start your final message with the question in a way that is obvious to the user that this is a question and not simply a status update.
+
+## Cleanup After Merge
+
+After a PR managed by the `full-send` skill is merge, or if the user specifically asks you to do "full send cleanup", perform the following actions. Do not post a final message in the thread unless some step in this process fails:
+
+- Remove the worktree associated with this thread from the filesystem
+- Settle the current thread automatically
+
+If the cleanup process fails for any reason, you are allowed to post a diagnostic message in the thread, and leave it unsettled (settling the thread moves it out of the users view, and they will not review it to check if something actually went wrong.)
