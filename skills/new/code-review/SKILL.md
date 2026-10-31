@@ -1,10 +1,11 @@
 ---
 name: code-review
 description: >-
-  Review a set of code changes (PR, branch, diff).
+  Review a set of code changes (PR, branch, diff), including the user's coding style and design preferences.
   Use when the user asks for a "code review" or another skill requires this as part of an approval gate. 
 metadata:
-  dependencies: []
+  dependencies:
+  - coding-style skill
 ---
 
 # Code review
@@ -13,8 +14,10 @@ Review code change across the following areas. A passing result in one area does
 - Correctness
 - Readability and simplicity
 - Architecture and design
+- Coding style
 - Security
 - Performance
+- Test quality
 
 Recommend approval when the change delivers its intended behavior, maintains or improves code health, follows project standards, and has no unresolved blockers. Optional improvements and nits can wait.
 
@@ -43,6 +46,7 @@ Record the scope, endpoints or patch, commit list, and changed files. Every revi
 Read applicable repository instructions and gather these sources once for all reviewers:
 
 - **Standards**: `AGENTS.md`, `CODING_STANDARDS.md`, `CONTRIBUTING.md`, and relevant design, naming, testing, and language guidance. Apply nested instructions within their scope.
+- **Coding style**: read [coding-style](../../engineering/coding-style/SKILL.md), including its shared rules and references relevant to the changed languages, frameworks, and backend code. Load it even when the repository does not mention the skill.
 - **Intent**: start with the user's requirements or supplied path, then the PR description, linked issues, commit issue references, relevant ADRs (`docs/adr/`), architecture docs (`docs/architecture/`), `GLOSSARY.md`/`GLOSSARY-MAP.md`, and relevant files under `specs/` or `.scratch/`. Use available tracker tools or repository workflows; tracker setup should not block review.
 - **Security**: `SECURITY.md`, threat models, security ADRs, and guidance on authentication, authorization, tenant isolation, privacy, and secrets. Read tests around changed boundaries.
 - **Verification**: test/build commands, CI results, and the author's reported tests, manual checks, screenshots, or benchmarks.
@@ -53,7 +57,9 @@ Without a spec, assess correctness against the stated goal, public contracts, ex
 
 Project standards override the design heuristics below. Cite the source and rule for standards violations; label design judgments as judgments. Local conventions cannot excuse an evidenced vulnerability. Leave routine formatting and lint enforcement to configured tools, and report relevant failures once.
 
-### 3. Read tests and review all five axes
+Use the scope and precedence in `coding-style` when applying personal preferences. Applicable preferences take priority over the generic readability, architecture, and test guidance below.
+
+### 3. Read tests and review all seven axes
 
 Read changed tests and nearby contract tests first. Identify the behaviors they establish, failures they catch, and significant paths they omit.
 
@@ -74,7 +80,7 @@ The coordinator validates and reconciles the results.
 
 Confirm that each reported problem is introduced, exposed, or materially worsened by the change. Check surrounding guards, callers, contracts, and tests. Keep unchanged problems outside the findings unless the diff activates or aggravates them.
 
-Run the smallest relevant tests and required repository checks when feasible. Record commands, results, and checks that could not run. Separate reviewer-run results from author or CI evidence, and pre-existing failures from regressions. Passing tests support the behavior they exercise; they do not establish all five axes.
+Run the smallest relevant tests and required repository checks when feasible. Record commands, results, and checks that could not run. Separate reviewer-run results from author or CI evidence, and pre-existing failures from regressions. Passing tests support the behavior they exercise; they do not establish all seven axes.
 
 For bug fixes, look for a regression test that fails on the old behavior and passes on the new. If test sensitivity remains unclear, or confirming a finding requires code changes, describe the proposed experiment and get approval before doing that additional work.
 
@@ -84,7 +90,7 @@ After approval, use a worktree or isolated copy containing the reviewed snapshot
 
 Use the report format below. If a follow-up review is requested after fixes, establish the new snapshot and recheck affected paths and verification.
 
-## The five axes
+## The seven axes
 
 ### Correctness
 
@@ -110,6 +116,14 @@ Use the report format below. If a follow-up review is requested after fixes, est
 - Split modules with unrelated responsibilities. Narrow inherited contracts or use composition when an implementation rejects much of its contract. File length is a reason to inspect responsibilities, not a verdict.
 
 Treat these design suggestions as judgments. Make a structural concern Required when it violates a project standard or demonstrably worsens maintainability, coupling, or contracts. Otherwise offer an Optional improvement with its tradeoff. Propose the smallest useful change; extraction and polymorphism must earn their complexity.
+
+### Coding style
+
+Check new and modified code against the applicable shared rules and references from `coding-style`. Include design decisions as well as syntax. Respect each rule's scope, exceptions, and room for judgment.
+
+Report a clear departure from an applicable preference as Required and recommend Request changes until it is corrected or the user explicitly accepts an exception. Cite the rule's file and section, show how the changed code departs from it, and propose the smallest correction. Passing tests do not resolve a coding style violation.
+
+Use the relevant general review axis for design judgments that have no matching rule in the skill. Keep unrelated existing style differences outside the requested changes. If the skill or a needed reference cannot be read, mark this axis unverified and the recommendation Incomplete.
 
 ### Security
 
@@ -144,6 +158,17 @@ If no plausible attack path is found, report no security findings and state the 
 - Tie concerns to reachable paths and realistic workloads. Use operation counts, measurements, or labeled estimates. Speculative micro-optimizations are Optional at most.
 - Seek comparable before/after measurements for claimed optimizations or suspected regressions. If scale or workload is unknown, state the assumption and benchmark needed.
 
+### Test quality
+
+Review new and changed tests alongside existing tests for the affected behavior. Each test should protect a behavior or catch a plausible regression.
+
+- Compare the failures each case can catch. Recommend one clear test when several cover the same scenario and failure. Preserve cases that protect distinct boundaries, contracts, or regressions, even when their assertions look alike.
+- Identify tests made obsolete by the change and propose removal or replacement. Check their expectations against current requirements first; a failing test may expose a regression.
+- Combine repetitive setup or related cases when the result stays easy to read and diagnose. Parameterized cases still execute individually. Reduce runtime by removing redundant executions or repeated expensive setup while preserving isolation.
+- Request another test only when it catches a meaningful failure that current coverage misses.
+
+For each cleanup finding, name the tests to remove, replace, or combine, explain why their coverage overlaps or no longer applies, and identify the coverage to retain. Treat cleanup as Optional unless it causes a concrete blocker. Distinguish measured runtime savings from estimates.
+
 ## Conditional checks
 
 ### Dependencies and lockfiles
@@ -171,7 +196,7 @@ The description should explain what changes and why, with relevant requirements 
 
 Give actionable findings stable IDs and an action label:
 
-- Required: an evidenced bug, vulnerability, necessary test-coverage gap, standards violation, or material structural regression that blocks approval.
+- Required: an evidenced bug, vulnerability, necessary test-coverage gap, standards violation, applicable coding-style violation, or material structural regression that blocks approval.
 - Optional: an improvement with a concrete benefit that does not block approval.
 - Nit: a minor optional detail. Include sparingly and leave automated style checks to tooling.
 - FYI: context without a requested change. Exclude it from actionable counts.
@@ -183,7 +208,7 @@ Validate findings before combining them. Deduplicate findings with the same unde
 Present one report containing:
 
 1. Scope and sources: the reviewed comparison or patch, intent, standards, and evidence limitations.
-2. Five sections in order: `Correctness`, `Readability & Simplicity`, `Architecture`, `Security`, `Performance`. Put Required findings first by impact, then Optional findings. For empty sections, state “No findings” and briefly describe coverage. Mark partial or inapplicable coverage. Under Security, separate `Concrete findings` and `Unresolved risks`, even when empty.
+2. Seven sections in order: `Correctness`, `Readability & Simplicity`, `Architecture`, `Coding style`, `Security`, `Performance`, `Test quality`. Put Required findings first by impact, then Optional findings. For empty sections, state “No findings” and briefly describe coverage. Mark partial or inapplicable coverage. Under Security, separate `Concrete findings` and `Unresolved risks`, even when empty.
 3. Verification: reviewer-run checks and results, author/CI evidence, and remaining checks.
 4. Summary: a compact table with coverage, Required/Optional counts, and the most consequential issue per axis. Count Nits as Optional; exclude FYIs, cross-references, and unresolved risks. State the highest concrete security severity, or none, and the unresolved security-risk count.
 5. Recommendation: `Approve`, `Request changes`, or `Incomplete`.

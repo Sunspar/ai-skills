@@ -1,15 +1,15 @@
 ---
-name: personal-coding-style
-description: Apply the user's coding preferences when implementing or refactoring code. Use these defaults where project conventions leave a choice open or the user explicitly requests this style, loading language and framework guidance only as relevant.
+name: coding-style
+description: Apply the user's coding style and design preferences when implementing, refactoring, or reviewing code. Use these defaults where project conventions leave a choice open or the user explicitly requests this style, loading language and framework guidance only as relevant.
 ---
 
-# Personal Coding Style
+# Coding style
 
 ## Fit the project
 
 Follow the current task, project instructions, and established code conventions. Use the defaults below where the project leaves a choice open, or when the user explicitly requests them in place of an existing convention.
 
-For a functional change, follow the surrounding code's style. Keep stylistic realignment in a separate cleanup change or PR; the profile alone does not request that cleanup.
+Apply these preferences to new and modified code during implementation, refactoring, and review. Keep unrelated stylistic realignment in a separate cleanup change or PR.
 
 ## Read applicable references
 
