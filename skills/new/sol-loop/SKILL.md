@@ -24,7 +24,7 @@ Run `git status --short`. Do not stash, discard, or include unrelated changes. L
 
 Find the base after `git fetch origin`:
 - PR: `gh pr view <n> --json baseRefName,headRefOid`. Check out the branch only if clean. Confirm `HEAD` is the PR head, or ahead only by this change. Base: `git merge-base HEAD origin/<baseRefName>`.
-- Local: `git merge-base HEAD origin/<default-branch>`. No remote: a base the user names, or `HEAD` for uncommitted changes only.
+- Local: use the base branch supplied by the user or calling workflow, otherwise the default branch. Resolve it after fetching and use `git merge-base HEAD <base-ref>`. Without a remote, use a local base supplied by the user or caller, or `HEAD` for uncommitted changes only.
 
 The change is base to working tree in those paths, with untracked files. Use one diff command all rounds. State intent and out-of-scope in 1-2 sentences. Run covering checks. Do not send code this change breaks. Note missing or pre-failing checks in the brief.
 

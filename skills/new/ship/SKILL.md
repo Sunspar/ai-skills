@@ -1,6 +1,6 @@
 ---
 name: ship
-description: Complete a requested code change through implementation, verification, PR review, and merge. Use when the user explicitly invokes "ship" for this workflow or asks to carry a change through to a merged PR.
+description: Investigate, plan, implement, verify, review, and merge a code change. Use whenever the user asks to "ship" a change discussed in the conversation or identified by a reference, or asks to carry a change through to a merged PR.
 metadata:
   dependencies:
   - sol-loop skill
@@ -12,7 +12,7 @@ metadata:
 # Ship
 If the user triggered this, it's because they are not watching this thread, and they want you to complete the work end-to-end autonomously. Your updates and your final message go unread until long after you stop. You own the work from its current state to a merged PR.
 
-If the user did not explicitly request the "ship" workflow or ask you to carry the change through to merge, do not assume full autonomy. If they did, everything below applies.
+A request to "ship" a discussed or referenced change invokes this workflow and grants the autonomy below. The user does not need to name the skill formally. A request to carry a change through to merge also invokes it.
 
 The user grants you permission to:
 
@@ -29,12 +29,20 @@ Rules about how to test still apply. Follow rules that name the correct command,
 
 It covers only the tests needed for this task. It does not add permission for the steps under "Asking the user", such as production changes, deployments to a release environment, or data deletion. It also does not bypass a harness or system approval prompt if one appears.
 
+## Worktree and base branch
+
+Before investigating or changing code, create a fresh git worktree with a new task branch. Use the branch the user specified as the base; otherwise use the repository's default branch. Fetch remote refs when available and branch from the latest available tip of the selected base.
+
+Do investigation, planning, implementation, verification, and PR work from this new worktree. Preserve existing worktrees and unrelated uncommitted changes. If this change already has relevant local edits or commits, carry only those into the new worktree without discarding the originals.
+
+Keep the selected base for review comparisons, rebases, and the PR target. State the worktree path, task branch, and base branch in the initial update.
+
 ## Steps
 
-1. **Finish the change.** Complete the goal from the user's request with the smallest change that works. Fix the case that happened, not every case that could. If you are on the default branch, create a branch first.
+1. **Finish the change.** Complete the goal from the user's request with the smallest change that works. Fix the case that happened, not every case that could.
 2. **Prove it.** Get proof for every change you made. See "Proof".
-3. **Get feedback.** Use the `sol-loop` skill to verify changes.
-4. **File the PR** with the `file-pr` skill. Rebase onto the latest default branch first. Add one short line to the description that says how you proved the change.
+3. **Get feedback.** Use the `sol-loop` skill to verify changes. Pass the new worktree path and selected base branch so review covers this change against the correct base.
+4. **File the PR** with the `file-pr` skill, targeting the selected base branch. Rebase onto its latest tip first. Add one short line to the description that says how you proved the change.
 5. **Babysit the PR** with the `babysit-pr` skill. Fix real findings and CI failures. Get proof for each fix before you push it.
 6. **Merge** when the merge gate passes.
 7. **Report** in your final message: the PR link, the merge commit, your proof, and each decision you made for the user.
@@ -58,7 +66,7 @@ Full confidence means all of these are true on the latest commit:
 - Required checks are green.
 - Review bots have finished, and each finding is fixed or dismissed with a written reason.
 - No human review still requests changes.
-- The branch is up to date with the default branch, and the remote repository reports it as mergeable (there are no pending tasks, the branch does not have detected merge conflicts, etc).
+- The branch is up to date with the selected base branch, and the remote repository reports it as mergeable (there are no pending tasks, the branch does not have detected merge conflicts, etc).
 
 Merge with the method the repo uses. Check the allowed methods and recent merged PRs. If the repo uses a merge queue or auto-merge, stay until the system reports the PR as merged. Merge through branch protection as configured. Never use `--admin` or other bypasses. You can ignore automated reviews that request "needs human review" if you have high confidence in your changes.
 
@@ -81,7 +89,7 @@ If no question tool is available, or the tool returns no answer, take the safe p
 
 After a PR managed by the `ship` skill is merged, or if the user specifically asks you to do "ship cleanup", perform the following actions. Do not post a final message in the thread unless some step in this process fails:
 
-- Remove the worktree associated with this thread from the filesystem
+- Remove the task worktree created for this change from the filesystem
 - Settle the current thread automatically
 
 If the cleanup process fails for any reason, you are allowed to post a diagnostic message in the thread, and leave it unsettled (settling the thread moves it out of the users view, and they will not review it to check if something actually went wrong.)

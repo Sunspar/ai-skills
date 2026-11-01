@@ -8,7 +8,7 @@ metadata:
 ---
 
 # File Pull Request
-Before filing, check whether a PR for this branch already exists. Review the diff locally against the base branch (usually `origin/main` or `origin/dev`) to make sure its contents match the goal.
+Before filing, check whether a PR for this branch already exists. Use the base branch specified by the user or calling workflow; otherwise use the existing PR's base, or the repository's default branch for a new PR. Review the diff locally against that base to make sure its contents match the goal, and use the same base when creating the PR.
 
 PR titles usually become commit messages, so follow the repository's title conventions. Look at recently merged PRs and Git history for examples. Prefer a concise, human-readable title that explains why the change matters:
 

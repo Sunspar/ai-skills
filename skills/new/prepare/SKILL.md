@@ -1,6 +1,6 @@
 ---
 name: prepare
-description: Complete a requested code change and make its PR ready for the user to merge, resolving verification and review feedback. Use when the user explicitly invokes "prepare" for this code-change workflow, including a closing "Prepare." attached to a code-change request.
+description: Investigate, plan, implement, verify, and review a code change, leaving its PR ready for the user to merge. Use whenever the user asks to "prepare" a change discussed in the conversation or identified by a reference, including a closing "Prepare." attached to a change request.
 metadata:
   dependencies:
   - ship skill
@@ -9,7 +9,15 @@ metadata:
 # Prepare
 Do the same work as `ship`, but stop with the PR ready for the user to merge. Never merge it.
 
-Read [ship](../ship/SKILL.md) and follow its workflow, proof rules, review, and babysitting steps. An explicit "prepare" request authorizes that work without a separate "ship" request. That includes ship's testing permission. A "prepare" request is the permission for the test methods Proof needs, even when a project file says to ask first, for example before computer use. Use those methods directly. Its merge permission does not apply. The overrides below take precedence.
+Read [ship](../ship/SKILL.md) and follow its workflow, proof rules, review, and babysitting steps. A request to "prepare" a discussed or referenced change invokes this workflow without a formal skill invocation or separate "ship" request. That includes ship's testing permission. A "prepare" request is the permission for the test methods Proof needs, even when a project file says to ask first, for example before computer use. Use those methods directly. Its merge permission does not apply. The overrides below take precedence.
+
+## Worktree and base branch
+
+Before investigating or changing code, create a fresh git worktree with a new task branch. Use the branch the user specified as the base; otherwise use the repository's default branch. Fetch remote refs when available and branch from the latest available tip of the selected base.
+
+Do investigation, planning, implementation, verification, and PR work from this new worktree. Preserve existing worktrees and unrelated uncommitted changes. If this change already has relevant local edits or commits, carry only those into the new worktree without discarding the originals.
+
+Keep the selected base for review comparisons, rebases, and the PR target. State the worktree path, task branch, and base branch in the initial update.
 
 ## No merging
 You may commit, push, rebase, fix conflicts, and use `--force-with-lease` on this task's branch. Never merge, enable auto-merge, enter a merge queue, push to the default branch, bypass branch protection, or delegate those actions.

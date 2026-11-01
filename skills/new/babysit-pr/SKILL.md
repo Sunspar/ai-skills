@@ -55,7 +55,7 @@ Screenshots and videos help as well, when you have a way to upload them.
 Keep the PR at the size the user's goal needs. Review loops tend to grow a PR one cheap-looking fix at a time. Fix real bugs in the intended case. Decline the rest with a written reason, and list them as follow-ups: unneeded tests, guards for edge cases that do not matter, extra integration or compatibility, and small performance costs. Prefer the fix that deletes or narrows code.
 
 ## Base branch and merging
-Keep an eye on changes to `main` and rebase when needed. `pr-wait` reports when new base commits touch this PR's files, and when the PR becomes BEHIND or DIRTY. `watch_pull_request` reports conflicts only, so check for BEHIND yourself before you call the PR ready.
+Keep an eye on changes to the PR's actual base branch and rebase when needed. `pr-wait` reports when new base commits touch this PR's files, and when the PR becomes BEHIND or DIRTY. `watch_pull_request` reports conflicts only, so check for BEHIND yourself before you call the PR ready.
 
 If an overlapping PR makes this one obsolete, stop monitoring, report it to the user, and ask before closing the PR unless closure was explicitly authorized.
 
