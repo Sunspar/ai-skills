@@ -16,7 +16,7 @@ Apply these preferences to new and modified code during implementation, refactor
 Apply the shared preferences below, then read only the references relevant to the work:
 
 - **Dart code:** [Dart preferences](references/languages/dart.md) for explicit failure values, Result dependencies, and JSON conversion.
-- **Rust code:** [Rust preferences](references/languages/rust.md) for ownership, identifier wrappers, deserialization, fallible control flow, repeated implementations, and error-reporting tools.
+- **Rust code:** [Rust preferences](references/languages/rust.md) for ownership, identifier wrappers, deserialization, fallible control flow, repeated implementations, error-reporting tools, and focused test coverage.
 - **Flutter code:** [Flutter preferences](references/frameworks/flutter.md) for presentation and form components.
 - **Riverpod code:** [Riverpod preferences](references/frameworks/riverpod.md) for subscription granularity and selection costs.
 - **Backend or database work:** [Backend structure](references/backend-structure.md) for feature grouping, layer responsibilities, transaction contracts, API/model separation, and persistence tests.

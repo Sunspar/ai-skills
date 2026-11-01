@@ -37,3 +37,11 @@ With Chrono, use `Utc::now()` for local reads of the current UTC time. The share
 ## Error-reporting tools
 
 For application-surface error reporting, reach for a contextual report such as `anyhow` where it fits the project. Preserve the underlying cause. The shared distinction between surface reporting and programmatically handled library errors still applies.
+
+## Tests
+
+Use the smallest set of tests that gives confidence the feature works. Cover the happy path and likely error and boundary conditions. Include an unusual case when an explicit requirement or the severity of a possible failure warrants it.
+
+Before adding a case, check existing coverage and identify the distinct failure the new test would catch. One representative case is enough for equivalent inputs exercising the same behavior and failure mode. Retain cases that protect different contracts or meaningful regressions.
+
+Keep distinct scenarios separately named and runnable, following the shared test preferences. Share fixture helpers where useful while preserving isolation. Weigh the coverage each additional test provides against its execution, setup, and maintenance costs so the suite stays useful and fast as it grows.
