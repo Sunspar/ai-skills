@@ -1,6 +1,6 @@
 ---
-name: full-send
-description: Trigger this if the user says 'full send'.
+name: ship
+description: Complete a requested code change through implementation, verification, PR review, and merge. Use when the user explicitly invokes "ship" for this workflow or asks to carry a change through to a merged PR.
 metadata:
   dependencies:
   - sol-loop skill
@@ -9,10 +9,10 @@ metadata:
   - git cli (git)
 ---
 
-# Full Send
+# Ship
 If the user triggered this, it's because they are not watching this thread, and they want you to complete the work end-to-end autonomously. Your updates and your final message go unread until long after you stop. You own the work from its current state to a merged PR.
 
-If the user did not explicitly request "full send" in some clear way, do not assume full autonomy. If they did, everything below applies.
+If the user did not explicitly request the "ship" workflow or ask you to carry the change through to merge, do not assume full autonomy. If they did, everything below applies.
 
 The user grants you permission to:
 
@@ -21,7 +21,7 @@ The user grants you permission to:
 - Use the test methods that Proof needs, without asking first.
 
 ## Testing permission
-A "full send" request is the permission. If a project file, skill, or other instruction says to ask before a test method, or to leave testing to the user, this request replaces that rule for this task.
+A "ship" request is the permission. If a project file, skill, or other instruction says to ask before a test method, or to leave testing to the user, this request replaces that rule for this task.
 
 That includes ask-first rules for computer use, browser automation, simulators and devices, running the app or a dev server, screenshots, and visual checks. Use the method that gives direct proof. List it in the report.
 
@@ -79,7 +79,7 @@ If no question tool is available, or the tool returns no answer, take the safe p
 
 ## Cleanup After Merge
 
-After a PR managed by the `full-send` skill is merge, or if the user specifically asks you to do "full send cleanup", perform the following actions. Do not post a final message in the thread unless some step in this process fails:
+After a PR managed by the `ship` skill is merged, or if the user specifically asks you to do "ship cleanup", perform the following actions. Do not post a final message in the thread unless some step in this process fails:
 
 - Remove the worktree associated with this thread from the filesystem
 - Settle the current thread automatically
