@@ -31,18 +31,20 @@ Apply the shared preferences below, then read only the references relevant to th
 
 ### Named conditions
 
-When an `if`, `else if`, guard clause, or similar branch has a condition that is hard to scan or spans two or more lines, extract the evaluation into descriptive local boolean variables before the branch. Aim for a single readable line in the conditional. Name the intent of the checks so readers and agents can follow the decision as its logic grows.
+Name boolean variables used in conditionals as predicates: phrases that state what is true, such as `name_changed`, `name_matches`, `is_valid`, or `has_permission`. Apply this to conditional checks generally, including simple checks and extracted compound conditions, using the language's casing conventions. The name should make the decision readable without inspecting how it was calculated.
+
+When an `if`, `else if`, guard clause, or similar branch has a condition that is hard to scan or spans two or more lines, extract the evaluation into descriptive local boolean variables before the branch. Aim for a single readable line in the conditional.
 
 Split independent parts into separately named booleans when that makes the condition clearer. If combining those names still produces a long condition, give the combined decision a meaningful name such as `profiles_match`. Keep simple, obvious checks inline.
 
 For example, skip an update when the relevant fields match:
 
 ```python
-names_match = left.name == right.name
-ages_match = left.age == right.age
-addresses_match = left.address == right.address
+name_matches = left.name == right.name
+age_matches = left.age == right.age
+address_matches = left.address == right.address
 
-if names_match and ages_match and addresses_match:
+if name_matches and age_matches and address_matches:
     return
 
 update_profile(right)
