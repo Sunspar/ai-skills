@@ -29,6 +29,27 @@ Apply the shared preferences below, then read only the references relevant to th
 - Prefer readable transformation chains where idiomatic, with short steps expressing the sequence of iterating, filtering, mapping, and collecting rather than mutable bookkeeping.
 - Short bindings in small closures are fine when local context makes their meaning obvious.
 
+### Named conditions
+
+When an `if`, `else if`, guard clause, or similar branch has a condition that is hard to scan or spans two or more lines, extract the evaluation into descriptive local boolean variables before the branch. Aim for a single readable line in the conditional. Name the intent of the checks so readers and agents can follow the decision as its logic grows.
+
+Split independent parts into separately named booleans when that makes the condition clearer. If combining those names still produces a long condition, give the combined decision a meaningful name such as `profiles_match`. Keep simple, obvious checks inline.
+
+For example, skip an update when the relevant fields match:
+
+```python
+names_match = left.name == right.name
+ages_match = left.age == right.age
+addresses_match = left.address == right.address
+
+if names_match and ages_match and addresses_match:
+    return
+
+update_profile(right)
+```
+
+Keep extracted checks close to their use. Preserve evaluation order, short-circuiting, and guard safety; evaluate dependent checks only after their prerequisites hold.
+
 ## Helpers and reuse
 
 - A second caller alone does not justify extracting a shared helper. Small, familiar mechanics such as basic file or byte reading can stay local even when duplicated.
