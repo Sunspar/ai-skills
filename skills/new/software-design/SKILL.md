@@ -11,6 +11,19 @@ Follow the current task, project instructions, and established code conventions 
 
 Apply the shared principles to new and modified code during design, implementation, refactoring, and review. Never inflate the PR with unrelated stylistic realignment (even if such changes are valid given your ruleset) if you are working on a targeted feature or bugfix - such cleanup should happen seperately in a dedicated cleanup pass when requested.
 
+## Minimal implementation
+
+Implement the complete requested behavior with the smallest amount of clear, maintainable code that satisfies the requirements and project conventions. Apply this preference throughout implementation and review.
+
+- Reuse existing project code, standard-library features, and established dependencies before introducing another implementation.
+- Keep behavior, branches, configuration, and extension points limited to present requirements. Add flexibility when a concrete caller needs it.
+- Introduce helpers, types, modules, and layers when they reduce concrete complexity, enforce a useful contract, or centralize nontrivial behavior. Each addition should earn its implementation and caller overhead.
+- Prefer fewer lines when behavior and readability are equivalent. Preserve useful names, explicit control flow, and meaningful types.
+- Judge the amount of code maintained across the affected implementation, rather than only the size of the diff. Keep simplification within the task's scope.
+- Use focused tests for distinct behaviors and failure modes. Reuse fixtures and existing coverage while preserving required checks.
+
+Before final validation, review the change for code that can be removed, inlined, combined, or replaced with existing functionality. Simplify anything that adds no necessary behavior or meaningful clarity.
+
 ## Modules and interfaces
 
 Design **deep modules**: substantial behavior behind a small interface. The aim is **leverage** for callers (more capability for less to learn) and **locality** for maintainers (knowledge, changes, bugs, and verification concentrated in one place).
@@ -78,7 +91,7 @@ Keep extracted checks close to their use. Preserve evaluation order, short-circu
 
 - A second caller alone does not justify a shared helper. Small, familiar mechanics such as basic file or byte reading can stay local even when duplicated.
 - Favor extraction for algorithmic work, nontrivial complexity, or logic that requires a specific understanding of a process. Extract named steps when they simplify repeated use in transformation chains.
-- An inline transformation around five or six lines can stay inline, but it is approaching the user's preferred limit. Extract a helper when it grows further or requires several reasoning steps. Judge complexity and readability rather than enforcing a hard line count.
+- Keep transformations inline while they remain easy to understand. Extract a helper when its name or shared implementation materially reduces reasoning.
 
 ## Types and inputs
 

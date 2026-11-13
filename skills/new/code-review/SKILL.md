@@ -5,7 +5,7 @@ description: >-
   Use when the user asks for a "code review" or another skill requires this as part of an approval gate. 
 metadata:
   dependencies:
-  - coding-style skill
+  - software-design skill
 ---
 
 # Code review
@@ -46,7 +46,7 @@ Record the scope, endpoints or patch, commit list, and changed files. Every revi
 Read applicable repository instructions and gather these sources once for all reviewers:
 
 - **Standards**: `AGENTS.md`, `CODING_STANDARDS.md`, `CONTRIBUTING.md`, and relevant design, naming, testing, and language guidance. Apply nested instructions within their scope.
-- **Coding style**: read [coding-style](../../engineering/coding-style/SKILL.md), including its shared rules and references relevant to the changed languages, frameworks, and backend code. Load it even when the repository does not mention the skill.
+- **Software design**: read [software-design](../software-design/SKILL.md), including its shared rules on minimal implementation and references relevant to the changed languages, frameworks, and backend code. Load it even when the repository does not mention the skill.
 - **Intent**: start with the user's requirements or supplied path, then the PR description, linked issues, commit issue references, relevant ADRs (`docs/adr/`), architecture docs (`docs/architecture/`), `GLOSSARY.md`/`GLOSSARY-MAP.md`, and relevant files under `specs/` or `.scratch/`. Use available tracker tools or repository workflows; tracker setup should not block review.
 - **Security**: `SECURITY.md`, threat models, security ADRs, and guidance on authentication, authorization, tenant isolation, privacy, and secrets. Read tests around changed boundaries.
 - **Verification**: test/build commands, CI results, and the author's reported tests, manual checks, screenshots, or benchmarks.
@@ -57,7 +57,7 @@ Without a spec, assess correctness against the stated goal, public contracts, ex
 
 Project standards override the design heuristics below. Cite the source and rule for standards violations; label design judgments as judgments. Local conventions cannot excuse an evidenced vulnerability. Leave routine formatting and lint enforcement to configured tools, and report relevant failures once.
 
-Use the scope and precedence in `coding-style` when applying personal preferences. Applicable preferences take priority over the generic readability, architecture, and test guidance below.
+Use the scope and precedence in `software-design` when applying personal preferences. Applicable preferences take priority over the generic readability, architecture, and test guidance below.
 
 ### 3. Read tests and review all seven axes
 
@@ -119,7 +119,7 @@ Treat these design suggestions as judgments. Make a structural concern Required 
 
 ### Coding style
 
-Check new and modified code against the applicable shared rules and references from `coding-style`. Include design decisions as well as syntax. Respect each rule's scope, exceptions, and room for judgment.
+Check new and modified code against the applicable shared rules and references from `software-design`. Include design decisions as well as syntax. Respect each rule's scope, exceptions, and room for judgment.
 
 Report a clear departure from an applicable preference as Required and recommend Request changes until it is corrected or the user explicitly accepts an exception. Cite the rule's file and section, show how the changed code departs from it, and propose the smallest correction. Passing tests do not resolve a coding style violation.
 
@@ -196,7 +196,7 @@ The description should explain what changes and why, with relevant requirements 
 
 Give actionable findings stable IDs and an action label:
 
-- Required: an evidenced bug, vulnerability, necessary test-coverage gap, standards violation, applicable coding-style violation, or material structural regression that blocks approval.
+- Required: an evidenced bug, vulnerability, necessary test-coverage gap, standards violation, applicable software-design preference violation, or material structural regression that blocks approval.
 - Optional: an improvement with a concrete benefit that does not block approval.
 - Nit: a minor optional detail. Include sparingly and leave automated style checks to tooling.
 - FYI: context without a requested change. Exclude it from actionable counts.
