@@ -4,6 +4,8 @@ description: Investigate, plan, implement, verify, and review a code change, lea
 metadata:
   dependencies:
   - ship skill
+  - software-design skill
+  - code-review skill
 ---
 
 # Prepare
@@ -18,6 +20,12 @@ Before investigating or changing code, create a fresh git worktree with a new ta
 Do investigation, planning, implementation, verification, and PR work from this new worktree. Preserve existing worktrees and unrelated uncommitted changes. If this change already has relevant local edits or commits, carry only those into the new worktree without discarding the originals.
 
 Keep the selected base for review comparisons, rebases, and the PR target. State the worktree path, task branch, and base branch in the initial update.
+
+## Development and pre-PR review
+
+Use [software-design](../software-design/SKILL.md) to implement the proposed changes, including its shared principles and relevant language, framework, and backend references.
+
+Follow `ship`'s pre-PR review step: run the detailed [code-review](../code-review/SKILL.md) workflow before creating the PR. Its `Approve` verdict must cover the final diff after rebasing and resolving findings.
 
 ## No merging
 You may commit, push, rebase, fix conflicts, and use `--force-with-lease` on this task's branch. Never merge, enable auto-merge, enter a merge queue, push to the default branch, bypass branch protection, or delegate those actions.
