@@ -1,0 +1,117 @@
+---
+name: software-design
+description: Design, generate, refactor, and review code using the user's module design and coding preferences. Load relevant language, framework, and backend guidance as needed.
+---
+
+# Software Design
+
+## Fit the project
+
+Follow the current task, project instructions, and established code conventions. Use these defaults where the project leaves a choice open, or when the user explicitly requests them in place of an existing convention.
+
+Apply the shared principles to new and modified code during design, implementation, refactoring, and review. Keep unrelated stylistic realignment in a separate cleanup change or PR.
+
+## Modules and interfaces
+
+Design **deep modules**: substantial behavior behind a small interface. The aim is **leverage** for callers (more capability for less to learn) and **locality** for maintainers (knowledge, changes, bugs, and verification concentrated in one place).
+
+Use these terms consistently when discussing design:
+
+- **Module:** Anything with an interface and an implementation: a function, class, package, or slice spanning several tiers.
+- **Interface:** Everything a caller must know to use a module correctly, including types, invariants, ordering, error modes, configuration, and performance characteristics.
+- **Implementation:** The code and internal organization behind that interface.
+- **Depth:** The behavior a caller or test can exercise per unit of interface they must understand. Judge depth by leverage, rather than implementation size or a ratio of line counts.
+- **Seam:** A place where behavior can be replaced without editing the code that uses it. Choosing its location is a separate decision from choosing what goes behind it.
+- **Adapter:** A concrete implementation satisfying an interface at a seam; the term describes its role.
+
+Preserve project domain vocabulary, including an existing `GLOSSARY.md`. Use precise technical terms such as HTTP API, service layer, or bounded context for those specific concepts; use module, interface, and seam for the design concepts above.
+
+- Reduce what callers must know. Prefer fewer entry points, simpler parameters, and constraints enforced inside the module where this makes the interface easier to use correctly.
+- Keep internal composition behind the interface. A deep module can contain small parts and internal seams for its own tests without exposing them to callers.
+- Apply the **deletion test** before adding an abstraction: if removing it makes complexity vanish, it may be a pass-through; if that complexity reappears across callers, it is earning its keep.
+- Introduce substitution seams for actual variation. One adapter suggests a hypothetical seam; two justified adapters establish a real one. Reuse an existing seam before adding another port just for a fake.
+- Accept dependencies that need substitution or coordination, and keep their construction at the composition point. An existing ORM connection or transaction handle can be the dependency; this principle does not require a new persistence abstraction.
+- Prefer returning calculated values over mutating caller-owned state. Keep necessary side effects in the workflow that owns them. A straightforward workflow can make decisions beside its persistence calls without first producing an in-memory plan.
+
+## Read applicable references
+
+Apply the shared principles in this file, then read only the references relevant to the task.
+
+- **Designing or restructuring a module's interface:** [Module design](references/module-design.md) for evaluating depth, caller knowledge, and seam placement.
+- **Deepening a cluster of modules:** [Deepening](references/deepening.md) for dependency categories, adapter choices, and replacing redundant tests while preserving coverage.
+- **Exploring alternative interfaces:** [Design it twice](references/design-it-twice.md) for comparing substantially different designs. Use this when alternative design exploration is requested, rather than as a routine code-generation step.
+- **Dart code:** [Dart preferences](references/languages/dart.md) for explicit failure values, Result dependencies, and JSON conversion.
+- **Rust code:** [Rust preferences](references/languages/rust.md) for ownership, identifier wrappers, deserialization, fallible control flow, repeated implementations, error-reporting tools, and focused test coverage.
+- **Flutter code:** [Flutter preferences](references/frameworks/flutter.md) for presentation and form components.
+- **Riverpod code:** [Riverpod preferences](references/frameworks/riverpod.md) for subscription granularity and selection costs.
+- **Backend or database work:** [Backend structure](references/backend-structure.md) for feature grouping, layer responsibilities, transaction contracts, API/model separation, and persistence tests.
+- **Rust backend modules:** Also read [Rust backend conventions](references/languages/rust-backend.md), along with the Rust and backend references, for feature files and struct-associated service and repository functions.
+- **SeaORM entity definitions:** Also read [SeaORM conventions](references/frameworks/seaorm.md) for entity module naming and multiple tables.
+
+## Control flow
+
+- Use guard clauses and early returns to keep the main path flat.
+- Prefer readable transformation chains where idiomatic, with short steps for iterating, filtering, mapping, and collecting rather than mutable bookkeeping.
+- Short bindings in small closures are fine when local context makes their meaning obvious.
+
+### Named conditions
+
+Name boolean variables used in conditionals as predicates, such as `name_changed`, `name_matches`, `is_valid`, or `has_permission`, using the language's casing conventions. The name should make the decision readable without inspecting its calculation.
+
+When a branch condition is hard to scan or spans two or more lines, extract its evaluation into descriptive local booleans. Aim for a single readable line in the conditional. Split independent parts when this helps; give the combined decision a meaningful name when combining those names still makes the condition long. Keep simple, obvious checks inline.
+
+```python
+name_matches = left.name == right.name
+age_matches = left.age == right.age
+address_matches = left.address == right.address
+
+if name_matches and age_matches and address_matches:
+    return
+
+update_profile(right)
+```
+
+Keep extracted checks close to their use. Preserve evaluation order, short-circuiting, and guard safety; evaluate dependent checks only after their prerequisites hold.
+
+## Helpers and reuse
+
+- A second caller alone does not justify a shared helper. Small, familiar mechanics such as basic file or byte reading can stay local even when duplicated.
+- Favor extraction for algorithmic work, nontrivial complexity, or logic that requires a specific understanding of a process. Extract named steps when they simplify repeated use in transformation chains.
+- An inline transformation around five or six lines can stay inline, but it is approaching the user's preferred limit. Extract a helper when it grows further or requires several reasoning steps. Judge complexity and readability rather than enforcing a hard line count.
+
+## Types and inputs
+
+- Reject unknown fields by default when deserializing into a structured type, including API responses consumed by mobile clients.
+- Keep `normalize` limited to data cleanup, such as trimming whitespace. Put validation and business-rule checks in a separate `validate` function.
+- Use domain types to distinguish semantically different identifiers when interchange would be a bug. Use the language's type system to catch accidental mixing where possible.
+- When a concept warrants its own type, centralize validation in parsing or construction. Downstream operations consume the validated value without knowing every check. Email addresses and database identifiers are established examples.
+- Reasonably expected type-specific behavior is another reason for a dedicated type. These preferences do not require wrapping every primitive.
+- Group related business values into a named input type for service calls, such as recipient, role, and expiry. Keep execution context, such as the transaction, and the target entity identifier explicit. Use judgment rather than a universal argument-count cutoff.
+- For related business actions sharing mechanics, prefer one helper with a descriptive enum parameter over action-named wrappers or a boolean mode flag. This applies even to small private helpers with nearby callers.
+
+## Time
+
+Read the current time inside functions as needed. When a service requires a consistent date or timestamp across multiple models, capture it once at the beginning of the service function and pass it to the relevant helpers and repository operations.
+
+## Errors
+
+When a conversion fails, use a reasonable default when one exists and document the recovery scenario and fallback behavior. If no suitable default exists, return the failure through the function's error contract.
+
+At the application surface, where a failure is displayed to a user, use contextual error reporting while preserving the cause. For reusable libraries whose consumers may react to failure kinds, expose a meaningful higher-level error type describing what went wrong programmatically.
+
+## Comments
+
+Preserve meaningful context beyond the code's mechanics, especially external commitments and change-sensitive policy values. If support guarantees recovery for exactly 30 days, the recovery-window constant's comment should preserve that promise and its exact value so a future editor can see the consequence of changing it. State verified commitments rather than inventing a reason.
+
+## Tests
+
+- Treat the module's interface as the test surface. Assert observable outcomes through that interface so internal refactors can preserve the tests. Internal modules can have their own tests at their own interfaces; keep private implementation details out of caller-facing tests.
+- Prefer separate, behavior-named tests for distinct scenarios, including closely related boundary cases. Each should have its own failure report and be easy to run, change, or remove independently.
+- Keep those scenarios independently runnable rather than bundling assertions into a table-driven loop that stops at its first failure. Shared fixture helpers are compatible with this preference.
+- When deepening a module, replace tests coupled to removed internals once tests through the new interface protect their meaningful behavior. Preserve coverage of distinct contracts and regressions.
+
+## Refine from review feedback
+
+When the user asks to incorporate a PR correction or another concrete example, update the narrowest applicable rule while retaining its reason, scope, and exceptions.
+
+Keep shared principles here, substantial design guidance in the design references, language-specific decisions under `references/languages/`, and framework-specific decisions under `references/frameworks/`. Add a reference only when concrete guidance exists, with a conditional read link above. Keep project-only conventions local unless the user adopts them as a personal default.
