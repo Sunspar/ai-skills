@@ -1,15 +1,15 @@
 ---
 name: software-design
-description: Design, generate, refactor, and review code using the user's module design and coding preferences. Load relevant language, framework, and backend guidance as needed.
+description: Use when writing or thinking about an application's code. Use to guide design, generation, refactoring of a software system and to guide design principals and standards. Load relevant language, framework, and backend guidance as needed.
 ---
 
 # Software Design
 
 ## Fit the project
 
-Follow the current task, project instructions, and established code conventions. Use these defaults where the project leaves a choice open, or when the user explicitly requests them in place of an existing convention.
+Follow the current task, project instructions, and established code conventions in the repositories you are working in. Use these defaults where the project leaves a choice open, or when the user explicitly requests them in place of an existing convention.
 
-Apply the shared principles to new and modified code during design, implementation, refactoring, and review. Keep unrelated stylistic realignment in a separate cleanup change or PR.
+Apply the shared principles to new and modified code during design, implementation, refactoring, and review. Never inflate the PR with unrelated stylistic realignment (even if such changes are valid given your ruleset) if you are working on a targeted feature or bugfix - such cleanup should happen seperately in a dedicated cleanup pass when requested.
 
 ## Modules and interfaces
 
@@ -17,15 +17,16 @@ Design **deep modules**: substantial behavior behind a small interface. The aim 
 
 Use these terms consistently when discussing design:
 
-- **Module:** Anything with an interface and an implementation: a function, class, package, or slice spanning several tiers.
-- **Interface:** Everything a caller must know to use a module correctly, including types, invariants, ordering, error modes, configuration, and performance characteristics.
+- **Module:** Anything with an interface and an implementation: a function, class, package, or slice spanning several tiers or across multiple files.
+- **Interface:** Everything a caller MUST know to use a module correctly, including types, invariants, ordering, error modes, configuration, and performance characteristics.
 - **Implementation:** The code and internal organization behind that interface.
 - **Depth:** The behavior a caller or test can exercise per unit of interface they must understand. Judge depth by leverage, rather than implementation size or a ratio of line counts.
 - **Seam:** A place where behavior can be replaced without editing the code that uses it. Choosing its location is a separate decision from choosing what goes behind it.
 - **Adapter:** A concrete implementation satisfying an interface at a seam; the term describes its role.
 
-Preserve project domain vocabulary, including an existing `GLOSSARY.md`. Use precise technical terms such as HTTP API, service layer, or bounded context for those specific concepts; use module, interface, and seam for the design concepts above.
+Preserve project domain vocabulary, including an existing `GLOSSARY.md` or `GLOSSARY-MAP.md`. Use precise technical terms such as HTTP API, service layer, or bounded context for those specific concepts; use module, interface, and seam for the design concepts above.
 
+Your guidelines to follow when designing software, at a high level, are as follows:
 - Reduce what callers must know. Prefer fewer entry points, simpler parameters, and constraints enforced inside the module where this makes the interface easier to use correctly.
 - Keep internal composition behind the interface. A deep module can contain small parts and internal seams for its own tests without exposing them to callers.
 - Apply the **deletion test** before adding an abstraction: if removing it makes complexity vanish, it may be a pass-through; if that complexity reappears across callers, it is earning its keep.
@@ -52,7 +53,7 @@ Apply the shared principles in this file, then read only the references relevant
 
 - Use guard clauses and early returns to keep the main path flat.
 - Prefer readable transformation chains where idiomatic, with short steps for iterating, filtering, mapping, and collecting rather than mutable bookkeeping.
-- Short bindings in small closures are fine when local context makes their meaning obvious.
+- Short bindings in small closures are fine when local context makes their meaning obvious, and doing so helps keep code clean.
 
 ### Named conditions
 
@@ -81,10 +82,9 @@ Keep extracted checks close to their use. Preserve evaluation order, short-circu
 
 ## Types and inputs
 
-- Reject unknown fields by default when deserializing into a structured type, including API responses consumed by mobile clients.
-- Keep `normalize` limited to data cleanup, such as trimming whitespace. Put validation and business-rule checks in a separate `validate` function.
+- Reject unknown fields by default when deserializing into a structured type, including API responses consumed by clients.
 - Use domain types to distinguish semantically different identifiers when interchange would be a bug. Use the language's type system to catch accidental mixing where possible.
-- When a concept warrants its own type, centralize validation in parsing or construction. Downstream operations consume the validated value without knowing every check. Email addresses and database identifiers are established examples.
+- When a concept warrants its own type, centralize validation in parsing or construction. Downstream operations consume the validated value without knowing every check.
 - Reasonably expected type-specific behavior is another reason for a dedicated type. These preferences do not require wrapping every primitive.
 - Group related business values into a named input type for service calls, such as recipient, role, and expiry. Keep execution context, such as the transaction, and the target entity identifier explicit. Use judgment rather than a universal argument-count cutoff.
 - For related business actions sharing mechanics, prefer one helper with a descriptive enum parameter over action-named wrappers or a boolean mode flag. This applies even to small private helpers with nearby callers.
@@ -101,7 +101,7 @@ At the application surface, where a failure is displayed to a user, use contextu
 
 ## Comments
 
-Preserve meaningful context beyond the code's mechanics, especially external commitments and change-sensitive policy values. If support guarantees recovery for exactly 30 days, the recovery-window constant's comment should preserve that promise and its exact value so a future editor can see the consequence of changing it. State verified commitments rather than inventing a reason.
+Preserve meaningful context beyond the code's mechanics, especially external commitments and change-sensitive policy values. For example, If customer support guarantees recovery for exactly 30 days, the recovery-window constant's comment should preserve that promise and its exact value so a future editor can see the consequence of changing it. State verified commitments rather than inventing a reason.
 
 ## Tests
 
