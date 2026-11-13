@@ -25,7 +25,13 @@ Keep the selected base for review comparisons, rebases, and the PR target. State
 
 Use [software-design](../software-design/SKILL.md) to implement the proposed changes, including its shared principles and relevant language, framework, and backend references.
 
+Before detailed review and PR creation, run the repository's applicable CI validation tasks locally, following [ship's local CI checks](../ship/SKILL.md#local-ci-checks). Fix failures caused by the change and rerun affected checks after later edits or rebases. Record commands, results, and any checks that cannot run locally.
+
 Follow `ship`'s pre-PR review step: run the detailed [code-review](../code-review/SKILL.md) workflow before creating the PR. Its `Approve` verdict must cover the final diff after rebasing and resolving findings.
+
+## PR change summary
+
+After publishing the PR branch, print [ship's PR change-summary table](../ship/SKILL.md#pr-change-summary) in the conversation before waiting on checks or reviews. Split added and deleted lines into application code, tests, generated content, and repository documentation, with any remaining changes accounted for. Refresh it after pushes that alter the PR diff and include the latest table in the handoff.
 
 ## No merging
 You may commit, push, rebase, fix conflicts, and use `--force-with-lease` on this task's branch. Never merge, enable auto-merge, enter a merge queue, push to the default branch, bypass branch protection, or delegate those actions.
@@ -42,4 +48,4 @@ Fetch the target branch and check the live PR's head, base, checks, reviews, and
 - **Waiting for required approval:** only human approval remains. Confirm that this is the actual blocker.
 - **Blocked:** explain what prevents readiness, what you tried, and what is needed. Follow `ship`'s rules for asking the user.
 
-In T3 Code, call `unwatch_pull_request` before the handoff or a question. Report the PR link, final head, verdict, proof, reviewer outcome, and remaining risks. State whether the PR is still open and unmerged.
+In T3 Code, call `unwatch_pull_request` before the handoff or a question. Report the PR link, final head, verdict, proof, local CI results, reviewer outcome, latest PR change-summary table, and remaining risks. State whether the PR is still open and unmerged.

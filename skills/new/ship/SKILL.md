@@ -42,25 +42,58 @@ Keep the selected base for review comparisons, rebases, and the PR target. State
 ## Steps
 
 1. **Finish the change.** Use [software-design](../software-design/SKILL.md), including its shared principles and relevant language, framework, and backend references, to implement the proposed changes. Complete the goal from the user's request with the smallest change that works. Fix the case that happened, not every case that could.
-2. **Prove it.** Get proof for every change you made. See "Proof".
+2. **Prove it and run local CI checks.** Get proof for every change you made and complete the applicable CI validation tasks locally. See "Proof" and "Local CI checks".
 3. **Get feedback.** Use the `sol-loop` skill to verify changes. Pass the new worktree path and selected base branch so review covers this change against the correct base.
-4. **Review before creating the PR.** Rebase onto the latest tip of the selected base branch, then run the detailed [code-review](../code-review/SKILL.md) workflow, including all seven review axes and its report. Pass the worktree path, selected base, user requirements, and proof. Resolve Required findings and any Incomplete verdict; rerun affected proof and review after fixes or meaningful rebase changes. Proceed only with an `Approve` verdict covering the final diff.
-5. **File the PR** with the `file-pr` skill, targeting the selected base branch. If further changes or rebases alter the reviewed diff, repeat the affected proof and review before creating the PR. Add one short line to the description that says how you proved the change.
-6. **Babysit the PR** with the `babysit-pr` skill. Fix real findings and CI failures. Get proof for each fix before you push it.
+4. **Review before creating the PR.** Rebase onto the latest tip of the selected base branch, rerun affected proof and local CI checks, then run the detailed [code-review](../code-review/SKILL.md) workflow, including all seven review axes and its report. Pass the worktree path, selected base, user requirements, and proof. Resolve Required findings and any Incomplete verdict; rerun affected proof, local CI checks, and review after fixes or meaningful rebase changes. Proceed only with an `Approve` verdict covering the final diff.
+5. **File the PR** with the `file-pr` skill, targeting the selected base branch. If further changes or rebases alter the reviewed diff, repeat the affected proof, local CI checks, and review before creating the PR. Add one short line to the description that says how you proved the change. After publishing the PR branch, print the PR change summary below before waiting on reviews or checks.
+6. **Babysit the PR** with the `babysit-pr` skill. Fix real findings and CI failures. Get proof and rerun affected local CI checks before pushing each fix. Refresh the change summary after pushes that alter the PR diff.
 7. **Merge** when the merge gate passes.
-8. **Report** in your final message: the PR link, the merge commit, your proof, the code-review verdict, and each decision you made for the user.
+8. **Report** in your final message: the PR link, the merge commit, your proof and local CI results, the code-review verdict, the latest PR change-summary table, and each decision you made for the user.
 
 Stay active from step 1 to step 8. If you end your turn while checks or bots are pending, the work stops, because nobody will prompt you again. Wait with the watcher from `babysit-pr`, so something wakes you when the PR changes. In T3 Code that is `watch_pull_request`. If you stop before the merge, call `unwatch_pull_request` first.
+
+## PR change summary
+
+After successfully pushing the PR branch, print a Markdown table in the conversation showing the full PR diff, not just the latest commit or push. Refresh it when later pushes change that diff, and include the latest table in the final report or handoff.
+
+Resolve the PR's actual base and pushed head commits; before PR creation, use the selected base branch and pushed head. Compute their merge base and obtain totals with `git diff --numstat -z --find-renames <merge-base-sha> <pushed-head-sha>`. State the compared refs or SHAs so the table identifies its scope and excludes unpublished edits.
+
+Classify every added and deleted text line exactly once:
+
+- **Application code:** Handwritten production source.
+- **Tests:** Tests, test support, and fixtures.
+- **Generated content:** Committed machine-produced artifacts, such as generated source, snapshots, and lockfiles. Establish this from repository attributes, headers, or generation configuration; generated content takes precedence over the other categories.
+- **Documentation:** Repository documentation and its source files.
+
+Use file roles for classification; inspect the diff to separate application code and tests within mixed files. Add an **Other** row for changes such as CI configuration, dependency manifests, or tooling that do not fit these categories, and briefly identify its contents. Reconcile the category totals with Git's totals. Report binary-file changes separately because their line counts are unavailable.
+
+Show all four categories, including zero rows, and a **Total** row. Net is added minus deleted. Use observed counts:
+
+| Category | Lines added | Lines deleted | Net |
+| --- | ---: | ---: | ---: |
+| Application code | <count> | <count> | <signed count> |
+| Tests | <count> | <count> | <signed count> |
+| Generated content | <count> | <count> | <signed count> |
+| Documentation | <count> | <count> | <signed count> |
+| **Total** | **<count>** | **<count>** | **<signed count>** |
 
 ## Proof
 Proof is evidence you observed yourself in this session: a command output, a reproduction, a screenshot. Use the most direct proof the change allows:
 
 - Reproduce the original failure, apply the fix, then watch the same reproduction pass.
-- Run the checks that the repo's CI runs (typecheck, lint, tests, security checks, etc).
+- Complete the local CI checks below.
 - Add one focused test that fails without the fix, when the behavior has none and the repo has a test setup.
 - For UI and runtime behavior, run the app and look at the change. Green mocked tests do not prove that the user experience works. Attach screenshots to the PR when they help and you have a way to upload them.
 
 When you cannot find a way to prove a change, you do not have full confidence. Ask the user.
+
+### Local CI checks
+
+Before detailed code review and PR creation, read the repository's CI workflows, their invoked scripts, and project instructions to identify validation tasks applicable to the change. Run their actual commands locally, including formatting checks, linting, type-checking, tests, builds, generation checks, and security checks where defined and applicable. Use the prescribed toolchain, flags, services, and environment setup when available. Limit this gate to validation tasks.
+
+Fix failures caused by the change and rerun the affected checks until they pass. Checks must cover the final diff; repeat affected checks after review fixes, rebases, or later changes before pushing. Record commands and observed results for the PR evidence and handoff.
+
+For pre-existing failures, record evidence that they also occur on the base and keep unrelated repairs outside this task. For checks requiring unavailable secrets, runner features, services, or remote infrastructure, run a supported local equivalent when one exists and state any difference in coverage. Clearly report checks that remain unrun or failing and why; distinguish local results from pending remote CI. Run every applicable validation task that can be executed locally before opening the PR.
 
 ## Merge gate
 Full confidence means all of these are true on the latest commit:
