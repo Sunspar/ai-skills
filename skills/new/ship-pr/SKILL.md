@@ -1,5 +1,5 @@
 ---
-name: ship
+name: ship-pr
 description: Investigate, plan, implement, verify, review, and merge a code change. Use whenever the user asks to "ship" a change discussed in the conversation or identified by a reference, or asks to carry a change through to a merged PR.
 metadata:
   dependencies:

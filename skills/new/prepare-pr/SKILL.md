@@ -1,9 +1,9 @@
 ---
-name: prepare
-description: Investigate, plan, implement, verify, and review a code change, leaving its PR ready for the user to merge. Use whenever the user asks to "prepare" a change discussed in the conversation or identified by a reference, including a closing "Prepare." attached to a change request.
+name: prepare-pr
+description: Investigate, plan, implement, verify, and review a code change, leaving the PR open for human review. Use whenever the user asks to "prepare a PR" for a code change, or ends messages with "prepare".
 metadata:
   dependencies:
-  - ship skill
+  - ship-pr skill
   - software-design skill
   - code-review skill
 ---
@@ -11,7 +11,7 @@ metadata:
 # Prepare
 Do the same work as `ship`, but stop with the PR ready for the user to merge. Never merge it.
 
-Read [ship](../ship/SKILL.md) and follow its workflow, proof rules, review, and babysitting steps. A request to "prepare" a discussed or referenced change invokes this workflow without a formal skill invocation or separate "ship" request. That includes ship's testing permission. A "prepare" request is the permission for the test methods Proof needs, even when a project file says to ask first, for example before computer use. Use those methods directly. Its merge permission does not apply. The overrides below take precedence.
+Read [ship-pr](../ship-pr/SKILL.md) and follow its workflow, proof rules, review, and babysitting steps. A request to "prepare" a discussed or referenced change invokes this workflow without a formal skill invocation or separate "ship" request. That includes ship's testing permission. A "prepare" request is the permission for the test methods Proof needs, even when a project file says to ask first, for example before computer use. Use those methods directly. Its merge permission does not apply. The overrides below take precedence.
 
 ## Worktree and base branch
 
@@ -40,7 +40,7 @@ Disable existing auto-merge and remove the PR from any merge queue before work b
 
 ## Stop at the gate
 
-Use `ship`'s merge gate as the readiness check. Replace its merge and final report steps with a handoff. Proof and review must cover the final diff. Recheck behavior changes and meaningful conflict fixes before handoff.
+Use `ship-pr`'s merge gate as the readiness check. Replace its merge and final report steps with a handoff. Proof and review must cover the final diff. Recheck behavior changes and meaningful conflict fixes before handoff.
 
 Fetch the target branch and check the live PR's head, base, checks, reviews, and mergeability. Confirm it is open, not a draft, and not set to merge without the user. If someone else merged it, report that instead.
 
