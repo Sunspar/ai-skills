@@ -1,0 +1,10 @@
+---
+original_source: https://github.com/mattpocock/skills/tree/main/skills/engineering
+ref: 24fe0ef7737efae15c87225755e9f6f5965e4888 (v1.3.1)
+license: MIT
+also_adapted: >-
+  references/shape.md from to-spec, references/slice.md from to-tickets, and references/frontier.md and
+  references/execute.md from implement-spec and implement, all at the ref above. Stage contracts, the
+  definition of ready, the review timebox, gate classes as a trust dial, and escape-based learning adapt
+  ideas from https://github.com/poteto/noodle (plan, execute, quality, schedule skills; docs/concepts/modes.md;
+  brain/plans/119-brainmaxxing-autoresearch) at 82d2921c52370f23f29086de81ccfb600939c037 (2026-03-19), MIT.

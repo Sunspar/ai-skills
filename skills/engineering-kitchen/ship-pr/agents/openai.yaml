@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ship"
+  short_description: "Take an idea or ticket to a merged PR unattended"
+  default_prompt: "Use $ship-pr to take this to a merged PR. I am not watching this thread."

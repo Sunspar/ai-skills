@@ -1,8 +1,8 @@
 ---
 name: adversarial-review
 description: >-
-  Review a code change (PR, branch, commit, or diff) with parallel reviewers on the other model, each attacking through one lens, and end with one verdict.
-  Use when the user asks for a code review, an adversarial review, or a "sol loop", or another skill requires review as an approval gate.
+  Review a code change (PR, branch, commit, or diff) or a spec with parallel reviewers on the other model, each attacking through one lens, and end with one verdict.
+  Use when the user asks for a code or spec review, an adversarial review, or a "sol loop", or another skill requires review as an approval gate.
 metadata:
   dependencies:
   - software-design skill
@@ -35,6 +35,15 @@ Each lens gets one reviewer, and that reviewer works through its lens alone, so 
 
 Size the change from `git diff --shortstat`, leaving out generated files and lockfiles. **Small** is under 50 lines in at most 2 files, **large** is 200 or more lines or 6 or more files, and **medium** is everything between.
 
+## Reviewing a spec
+
+A spec can be reviewed before any code exists, as `delivery`'s shape stage does. The steps hold, with these changes:
+
+- **Snapshot**: save the spec text to a file outside the repo, and record the repo's `HEAD` SHA. The file and the SHA are the change; in the reviewer brief, item 4 gives the spec path and the repo at that SHA in place of a diff. In loop mode, you edit the file between rounds.
+- **Lenses**: Skeptic, Architect, and Minimalist always; Attacker when the spec touches a security gate class; Steward when the project has a glossary or ADRs the spec must respect.
+- **Intent**: the idea or ticket the spec answers. Here reviewers do judge whether the spec serves that intent: missing cases, acceptance criteria no check can observe, unacknowledged one-way doors, and scope beyond the ask.
+- **Findings** cite the spec section in place of `file:line`, and each scenario is a case the spec gets wrong or leaves undecided.
+
 ## Steps
 
 ### 1. Fix the snapshot
@@ -62,7 +71,7 @@ Size the change and pick lenses from the table. Add a lens below its threshold w
 
 Gather these once, for every reviewer:
 
-- **Intent:** what the author is trying to achieve, in 1–3 sentences, and what is out of scope. Draw on the user's requirements, the PR description, linked issues, commit messages, ADRs (`docs/adr/`), architecture docs, the glossary, and specs under `specs/` or `.scratch/`. Reviewers challenge whether the work achieves the intent well. Whether the intent is right is not part of the review. Without a spec, judge against the stated goal, public contracts, existing behavior, and tests, and mark spec coverage unverified.
+- **Intent:** what the author is trying to achieve, in 1–3 sentences, and what is out of scope. Draw on the user's requirements, the PR description, linked issues, commit messages, ADRs (`docs/adr/`), architecture docs, the glossary, and specs under `specs/` or `.scratch/`. List a ticket's acceptance criteria one by one as requirements, so each can be mapped to code and proof. Reviewers challenge whether the work achieves the intent well. Whether the intent is right is not part of the review. Without a spec, judge against the stated goal, public contracts, existing behavior, and tests, and mark spec coverage unverified.
 - **Standards**, when the Steward runs: applicable `AGENTS.md` and `CLAUDE.md` files (nested ones apply within their directory), `CODING_STANDARDS.md`, `CONTRIBUTING.md`, and other design, naming, and testing guidance. For code, load the `software-design` skill and note the absolute paths of its file and of the references relevant to the changed languages and frameworks. For agent instructions, note the `writing-for-agents` skill's path.
 - **Security context**, when the Attacker runs: `SECURITY.md`, threat models, security ADRs, and guidance on authentication, authorization, tenant isolation, privacy, and secrets.
 - **Evidence:** run the smallest covering tests and the repository's required checks, and record the commands and results. Collect CI results and the author's reported tests, screenshots, or benchmarks. Keep your own runs separate from the author's claims, and pre-existing failures separate from regressions. In loop mode, fix any failures the change caused before round 1.

@@ -1,0 +1,6 @@
+---
+also_adapted: >-
+  references/languages/typescript.md adapts rules from
+  https://github.com/poteto/noodle/tree/main/.agents/skills/ts-best-practices
+  at 82d2921c52370f23f29086de81ccfb600939c037 (2026-03-19), MIT, Copyright (c) 2026 Lauren Tan.
+  Each rule was adopted, adapted, or rejected individually; rejected rules are not carried.

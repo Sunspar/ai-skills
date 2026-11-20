@@ -56,6 +56,7 @@ Apply the shared principles in this file, then read only the references relevant
 - **Exploring alternative interfaces:** [Design it twice](references/design-it-twice.md) for comparing substantially different designs. Use this when alternative design exploration is requested, rather than as a routine code-generation step.
 - **Dart code:** [Dart preferences](references/languages/dart.md) for explicit failure values, Result dependencies, and JSON conversion.
 - **Rust code:** [Rust preferences](references/languages/rust.md) for ownership, identifier wrappers, deserialization, fallible control flow, repeated implementations, error-reporting tools, and focused test coverage.
+- **TypeScript code:** [TypeScript preferences](references/languages/typescript.md) for external data, schema validation, type assertions and guards, variant types, exhaustive switches, object literals, and branded types.
 - **Flutter code:** [Flutter preferences](references/frameworks/flutter.md) for presentation and form components.
 - **Riverpod code:** [Riverpod preferences](references/frameworks/riverpod.md) for subscription granularity and selection costs.
 - **Backend or database work:** [Backend structure](references/backend-structure.md) for feature grouping, layer responsibilities, transaction contracts, API/model separation, and persistence tests.

@@ -1,0 +1,3 @@
+interface:
+  display_name: "Delivery"
+  short_description: "Run the seven-stage loop from idea or ticket to PR"

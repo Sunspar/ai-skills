@@ -1,7 +1,6 @@
 ---
 name: reflect
-description: Sweep the current session for lessons and route each to the brain, the skill-feedback queue, or a new check.
-disable-model-invocation: true
+description: Sweep the current session for lessons and route each to the brain, the skill-feedback queue, or a new check. Use when the user asks to reflect, or when the delivery loop reaches its learn stage.
 metadata:
   dependencies:
   - brain skill

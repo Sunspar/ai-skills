@@ -37,7 +37,7 @@ Lead each section with the recommended answer so the user can accept it in a wor
 
 **Section A — Issue tracker.**
 
-> Explainer: The "issue tracker" is where issues live for this repo. Skills like `to-tickets`, `triage`, and `to-spec` read from and write to it — they need to know whether to call `gh issue create`, write a markdown file under `.scratch/`, or follow some other workflow you describe. Pick the place you actually track work for this repo.
+> Explainer: The "issue tracker" is where issues live for this repo. Skills like `delivery`, `triage`, and `wayfinder` read from and write to it — they need to know whether to call `gh issue create`, write a markdown file under `.scratch/`, or follow some other workflow you describe. Pick the place you actually track work for this repo.
 
 Default posture: these skills were designed for GitHub. If a `git remote` points at GitHub, propose that. If a `git remote` points at GitLab (`gitlab.com` or a self-hosted host), propose GitLab. Otherwise (or if the user prefers), offer:
 
@@ -117,9 +117,9 @@ Then write the docs files using the seed templates in this skill folder as a sta
 For "other" issue trackers, write `docs/agents/issue-tracker.md` from scratch using the user's description.
 ### 5. Agent-specific external directories.
 
-Some of the engineering skills require external directories exist, such as implement-spec. Ensure these folders exist. If they already exist, do nothing. If they do not already exist, create them empty.
+Some of the engineering skills require external directories exist, such as `delivery` when it works a frontier of tickets. Ensure these folders exist. If they already exist, do nothing. If they do not already exist, create them empty.
 
-- `$HOME/agent-notes` - needed for any repository-external notes or files the agent needs to write (e.g for things like implement-spec).
+- `$HOME/agent-notes` - needed for any repository-external notes or files the agent needs to write (e.g. shared exploration notes for `delivery`'s frontier).
 
 ### 6. Done
 

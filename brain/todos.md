@@ -1,6 +1,6 @@
 # Todos
 
-<!-- next-id: 6 -->
+<!-- next-id: 10 -->
 
 ## Consolidation cleanup (required before the kitchen is done)
 
@@ -9,5 +9,12 @@
 
 ## Remaining noodle pieces
 
-3. [ ] Jira adapter: `sync` and `done` scripts plus an issue-tracker template, with the ticket key in branch names and PR titles.
-5. [ ] Plan sizing rules: one function or type per phase, at most 3 files, split past 5 test cases, a suggested model per phase.
+3. [ ] Jira issue-tracker template for `setup-engineering-skills`: Atlassian MCP operations for `delivery` (read with comments, comment, child tickets, blocking links), the status and label mapping, and whether a ticket resolves at PR or at merge.
+5. [ ] Model routing in `delivery`: which provider and model each stage and each frontier child should use. Commit sizing already lives in the execute stage.
+
+## Deferred from the Noodle review
+
+6. [ ] Review Noodle's UI skills (`interaction-design`, `make-interfaces-feel-better`, `frontend-design`) rule by rule for platform-neutral guidance; deferred by the user.
+7. [ ] Evaluate Noodle plan 119's skill-refinement loop (binary evals, one mutation per experiment) and `skill-creator`'s eval scripts for improving kitchen skills.
+8. [ ] Evaluate `ast-grep` rules as the cheap check for recurring review findings, and Noodle's `oops` for a broken base branch.
+9. [ ] Delivery trust report: find candidate PRs by `commenter:<run account>` instead of the `Delivery: opened` text, and check edit history before requiring the marker, so a PR whose opening record another account edited counts as no signal instead of vanishing (adversarial-review AT5 residual, declined after the five-round cap).

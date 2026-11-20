@@ -1,4 +1,0 @@
-interface:
-  display_name: "Prepare"
-  short_description: "Prove, review, and prepare a PR without merging"
-  default_prompt: "Use $prepare to make this PR ready for me to merge."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Prepare"
+  short_description: "Take an idea or ticket to a PR ready for me to merge"
+  default_prompt: "Use $prepare-pr to make this ready for me to merge."
