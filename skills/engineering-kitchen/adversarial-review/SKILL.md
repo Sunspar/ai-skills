@@ -71,7 +71,7 @@ Ask about missing intent only when the answer could change the verdict, and keep
 
 ### 4. Spawn the reviewers
 
-**Choose the model.** In T3, call `orchestrator_capabilities` once per thread. Take an enabled provider of the other kind that can run cross-provider child tasks: driver `codex` when you are Claude, or `claudeAgent` when you are Codex. Use its latest Sol or latest Opus model unless the user named one. Never hardcode a model ID. Record the provider, model, and effort as far as the tools expose them.
+**Choose the model.** In T3, call `orchestrator_capabilities` once per thread. Take an enabled provider of the other kind that can run cross-provider child tasks: driver `codex` when you are Claude, or `claudeAgent` when you are Codex. Use its latest Sol or latest Opus model unless the user named one. Never hardcode a model ID. Run Sol reviewers at `xhigh` effort, unless the user named another: in `target.options`, set the effort option `orchestrator_capabilities` lists for the model (`reasoningEffort` for Sol) to `xhigh`. Record the provider, model, and effort as far as the tools expose them.
 
 If the T3 tools are not listed, try one direct `orchestrator_capabilities` call, since they can load late. Outside T3, use a native subagent only if it runs the other model. When no route reaches the other model, report the blocker and stop. Whether a same-model reviewer is acceptable is the user's decision.
 
