@@ -4,8 +4,7 @@ description: Investigate, plan, implement, verify, review, and merge a code chan
 metadata:
   dependencies:
   - software-design skill
-  - code-review skill
-  - sol-loop skill
+  - adversarial-review skill
   - file-pr skill
   - babysit-pr skill
   - git cli (git)
@@ -43,14 +42,13 @@ Keep the selected base for review comparisons, rebases, and the PR target. State
 
 1. **Finish the change.** Use [software-design](../software-design/SKILL.md), including its shared principles and relevant language, framework, and backend references, to implement the proposed changes. Complete the goal from the user's request with the smallest change that works. Fix the case that happened, not every case that could.
 2. **Prove it and run local CI checks.** Get proof for every change you made and complete the applicable CI validation tasks locally. See "Proof" and "Local CI checks".
-3. **Get feedback.** Use the `sol-loop` skill to verify changes. Pass the new worktree path and selected base branch so review covers this change against the correct base.
-4. **Review before creating the PR.** Rebase onto the latest tip of the selected base branch, rerun affected proof and local CI checks, then run the detailed [code-review](../code-review/SKILL.md) workflow, including all seven review axes and its report. Pass the worktree path, selected base, user requirements, and proof. Resolve Required findings and any Incomplete verdict; rerun affected proof, local CI checks, and review after fixes or meaningful rebase changes. Proceed only with an `Approve` verdict covering the final diff.
-5. **File the PR** with the `file-pr` skill, targeting the selected base branch. If further changes or rebases alter the reviewed diff, repeat the affected proof, local CI checks, and review before creating the PR. Add one short line to the description that says how you proved the change. After publishing the PR branch, print the PR change summary below before waiting on reviews or checks.
-6. **Babysit the PR** with the `babysit-pr` skill. Fix real findings and CI failures. Get proof and rerun affected local CI checks before pushing each fix. Refresh the change summary after pushes that alter the PR diff.
-7. **Merge** when the merge gate passes.
-8. **Report** in your final message: the PR link, the merge commit, your proof and local CI results, the code-review verdict, the latest PR change-summary table, and each decision you made for the user.
+3. **Review before creating the PR.** Rebase onto the latest tip of the selected base branch, rerun affected proof and local CI checks, then run the `adversarial-review` skill in loop mode. Pass the worktree path, selected base, user requirements, and proof. Rerun affected proof, local CI checks, and review after fixes or meaningful rebase changes. Proceed only with a `PASS` verdict covering the final diff.
+4. **File the PR** with the `file-pr` skill, targeting the selected base branch. If further changes or rebases alter the reviewed diff, repeat the affected proof, local CI checks, and review before creating the PR. Add one short line to the description that says how you proved the change. After publishing the PR branch, print the PR change summary below before waiting on reviews or checks.
+5. **Babysit the PR** with the `babysit-pr` skill. Fix real findings and CI failures. Get proof and rerun affected local CI checks before pushing each fix. Refresh the change summary after pushes that alter the PR diff.
+6. **Merge** when the merge gate passes.
+7. **Report** in your final message: the PR link, the merge commit, your proof and local CI results, the adversarial-review verdict, the latest PR change-summary table, and each decision you made for the user.
 
-Stay active from step 1 to step 8. If you end your turn while checks or bots are pending, the work stops, because nobody will prompt you again. Wait with the watcher from `babysit-pr`, so something wakes you when the PR changes. In T3 Code that is `watch_pull_request`. If you stop before the merge, call `unwatch_pull_request` first.
+Stay active from step 1 to step 7. If you end your turn while checks or bots are pending, the work stops, because nobody will prompt you again. Wait with the watcher from `babysit-pr`, so something wakes you when the PR changes. In T3 Code that is `watch_pull_request`. If you stop before the merge, call `unwatch_pull_request` first.
 
 ## PR change summary
 
@@ -89,7 +87,7 @@ When you cannot find a way to prove a change, you do not have full confidence. A
 
 ### Local CI checks
 
-Before detailed code review and PR creation, read the repository's CI workflows, their invoked scripts, and project instructions to identify validation tasks applicable to the change. Run their actual commands locally, including formatting checks, linting, type-checking, tests, builds, generation checks, and security checks where defined and applicable. Use the prescribed toolchain, flags, services, and environment setup when available. Limit this gate to validation tasks.
+Before review and PR creation, read the repository's CI workflows, their invoked scripts, and project instructions to identify validation tasks applicable to the change. Run their actual commands locally, including formatting checks, linting, type-checking, tests, builds, generation checks, and security checks where defined and applicable. Use the prescribed toolchain, flags, services, and environment setup when available. Limit this gate to validation tasks.
 
 Fix failures caused by the change and rerun the affected checks until they pass. Checks must cover the final diff; repeat affected checks after review fixes, rebases, or later changes before pushing. Record commands and observed results for the PR evidence and handoff.
 
@@ -99,7 +97,7 @@ For pre-existing failures, record evidence that they also occur on the base and 
 Full confidence means all of these are true on the latest commit:
 
 - Your proof covers every change in the diff.
-- The detailed `code-review` verdict is `Approve` and covers the final diff.
+- The `adversarial-review` verdict is `PASS` and covers the final diff.
 - Required checks are green.
 - Review bots have finished, and each finding is fixed or dismissed with a written reason.
 - No human review still requests changes.

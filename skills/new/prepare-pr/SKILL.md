@@ -5,7 +5,7 @@ metadata:
   dependencies:
   - ship-pr skill
   - software-design skill
-  - code-review skill
+  - adversarial-review skill
 ---
 
 # Prepare
@@ -25,13 +25,13 @@ Keep the selected base for review comparisons, rebases, and the PR target. State
 
 Use [software-design](../software-design/SKILL.md) to implement the proposed changes, including its shared principles and relevant language, framework, and backend references.
 
-Before detailed review and PR creation, run the repository's applicable CI validation tasks locally, following [ship's local CI checks](../ship/SKILL.md#local-ci-checks). Fix failures caused by the change and rerun affected checks after later edits or rebases. Record commands, results, and any checks that cannot run locally.
+Before detailed review and PR creation, run the repository's applicable CI validation tasks locally, following [ship's local CI checks](../ship-pr/SKILL.md#local-ci-checks). Fix failures caused by the change and rerun affected checks after later edits or rebases. Record commands, results, and any checks that cannot run locally.
 
-Follow `ship`'s pre-PR review step: run the detailed [code-review](../code-review/SKILL.md) workflow before creating the PR. Its `Approve` verdict must cover the final diff after rebasing and resolving findings.
+Follow `ship`'s pre-PR review step: run the `adversarial-review` skill in loop mode before creating the PR. Its `PASS` verdict must cover the final diff after rebasing and resolving findings.
 
 ## PR change summary
 
-After publishing the PR branch, print [ship's PR change-summary table](../ship/SKILL.md#pr-change-summary) in the conversation before waiting on checks or reviews. Split added and deleted lines into application code, tests, generated content, and repository documentation, with any remaining changes accounted for. Refresh it after pushes that alter the PR diff and include the latest table in the handoff.
+After publishing the PR branch, print [ship's PR change-summary table](../ship-pr/SKILL.md#pr-change-summary) in the conversation before waiting on checks or reviews. Split added and deleted lines into application code, tests, generated content, and repository documentation, with any remaining changes accounted for. Refresh it after pushes that alter the PR diff and include the latest table in the handoff.
 
 ## No merging
 You may commit, push, rebase, fix conflicts, and use `--force-with-lease` on this task's branch. Never merge, enable auto-merge, enter a merge queue, push to the default branch, bypass branch protection, or delegate those actions.
