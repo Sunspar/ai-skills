@@ -1,6 +1,6 @@
 # Design It Twice
 
-Use this when the user requests alternative interfaces for a chosen module or deepening candidate. Based on Ousterhout's "Design It Twice": explore substantially different shapes before committing to one.
+Based on Ousterhout's "Design It Twice": explore substantially different shapes for a module, a deepening candidate, or an open architectural decision before committing to one.
 
 Use the vocabulary in [the skill entry point](../SKILL.md) and the project's domain vocabulary. Read [Deepening](deepening.md) when dependencies affect the candidate interfaces.
 
@@ -10,9 +10,12 @@ Explain the constraints every candidate must satisfy, the current caller needs, 
 
 ## Explore different interfaces
 
-When delegation is available and permitted, use three parallel subagents with distinct design constraints. Include a fourth when a cross-seam dependency strategy deserves its own exploration. If delegation is unavailable or prohibited, explore the alternatives directly.
+Scale the exploration to the decision:
 
-Give each agent the same technical context: relevant file paths, callers, coupling, dependency categories, domain vocabulary, and the behavior to place behind the seam. Vary the design objective:
+- **The user asked for alternatives, or the decision is a one-way door** (hard to undo once merged, such as a schema or an external contract): when delegation is available and permitted, use three parallel subagents with distinct design constraints, and a fourth when a cross-seam dependency strategy deserves its own exploration.
+- **Any other decision, or no delegation**: explore two or three alternatives directly, each as a short sketch.
+
+Ground every candidate, from a subagent or your own sketch, in the same technical context: relevant file paths, callers, coupling, dependency categories, domain vocabulary, and the behavior to place behind the seam. Vary the design objective:
 
 - **Minimal interface:** Aim for one to three entry points and high leverage per entry point.
 - **Flexibility:** Support the concrete use cases and extension needs identified in the brief.

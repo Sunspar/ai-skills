@@ -7,7 +7,7 @@ Turn one ready ticket into commits on the task branch, with proof for every acce
 1. Load the `software-design` skill, with its references for the languages and frameworks you touch.
 2. Plan in the session, not in a file. Break the ticket into commit-sized changes: one function or type with its tests, or one bug fix. Each change compiles and passes on its own and becomes one commit.
 3. Build test-first with the `tdd` skill at the seams the spec chose. For a bug fix, watch the regression test fail before the fix and keep that output as proof. When the cause of a failure is unknown, use `diagnosing-bugs` first.
-4. Make the smallest change that meets every acceptance criterion. Fix the case that happened, not every case that could. Run type checks and focused tests as you go.
+4. Meet every acceptance criterion with a minimal implementation (`software-design`), fixing the case that happened rather than every case that could. Run type checks and focused tests as you go.
 
 ## Stay in scope
 

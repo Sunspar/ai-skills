@@ -13,7 +13,7 @@ Reach for `research` when a fact lives outside the repo, and `prototype` when a 
 
 While deciding:
 
-- For an architectural decision (a new module, interface, schema, or dependency), sketch two or three approaches and record the one you chose and why. The `software-design` skill's design-it-twice reference has the method.
+- For an architectural decision (a new module, interface, schema, or dependency), design it twice with the `software-design` skill's design-it-twice reference, then record the design you chose and why under Decisions.
 - For a change to existing code, ask what you would build from scratch with this requirement in hand, and prefer that design when it is not much larger.
 - Choose testing seams: existing seams before new ones, at the highest level the behavior crosses, as few as possible.
 - Mark each one-way-door decision, and each part of the work that falls in a gate class.

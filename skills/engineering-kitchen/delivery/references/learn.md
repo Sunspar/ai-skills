@@ -11,7 +11,7 @@ Run the `reflect` skill before the final report. Learn leaves the repository unt
 - The run's failures: a ticket stopped by the timebox, a criterion without proof, a gate class review found that intake and slice missed.
 - Each assumption the user overturned.
 
-Name the rule a lesson concerns the same way every time, and put that name in each skill-feedback item: `software-design#<section-slug>`, `typescript#<rule-slug>`, the lens's finding prefix (`SK`, `ST`, `AT`, `AR`, `MI`), a principle slug, or `delivery/<stage>`. Repeats of the same miss then sit together in the queue, where `meditate` sees them as one recurring problem rather than scattered notes.
+Name the rule a lesson concerns the same way every time, and put that name in each skill-feedback item: `software-design#<heading-slug>` or a `software-design` reference's file name with its heading slug (`typescript#exhaustive-switches`), the lens's finding prefix (`SK`, `ST`, `AT`, `AR`, `MI`), a principle slug, or `delivery/<stage>`. Repeats of the same miss then sit together in the queue, where `meditate` sees them as one recurring problem rather than scattered notes.
 
 ## When a human reviews a delivery PR
 

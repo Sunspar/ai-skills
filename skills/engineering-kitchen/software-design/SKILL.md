@@ -1,6 +1,8 @@
 ---
 name: software-design
-description: Use when writing or thinking about an application's code. Use to guide design, generation, refactoring of a software system and to guide design principals and standards. Load relevant language, framework, and backend guidance as needed.
+description: >-
+  Coding standards and design vocabulary for application code: minimal implementation, deep modules and seams,
+  and language and framework rules. Use when designing, writing, refactoring, or reviewing code.
 ---
 
 # Software Design
@@ -9,7 +11,7 @@ description: Use when writing or thinking about an application's code. Use to gu
 
 Follow the current task, project instructions, and established code conventions in the repositories you are working in. Use these defaults where the project leaves a choice open, or when the user explicitly requests them in place of an existing convention.
 
-Apply the shared principles to new and modified code during design, implementation, refactoring, and review. Never inflate the PR with unrelated stylistic realignment (even if such changes are valid given your ruleset) if you are working on a targeted feature or bugfix - such cleanup should happen seperately in a dedicated cleanup pass when requested.
+Apply these rules to the code a change adds or modifies, during design, implementation, refactoring, and review. When nearby code breaks a rule, leave it as it is and record the cleanup as a **follow-up**: in a `delivery` run, file it as its execute stage says; otherwise, name it in your final message. A cleanup the user asks for is its own task, and these rules then cover the code it names.
 
 ## Minimal implementation
 
@@ -22,7 +24,7 @@ Implement the complete requested behavior with the smallest amount of clear, mai
 - Judge the amount of code maintained across the affected implementation, rather than only the size of the diff. Keep simplification within the task's scope.
 - Use focused tests for distinct behaviors and failure modes. Reuse fixtures and existing coverage while preserving required checks.
 
-Before final validation, review the change for code that can be removed, inlined, combined, or replaced with existing functionality. Simplify anything that adds no necessary behavior or meaningful clarity.
+Before final validation, review the change for code that can be removed, inlined, combined, or replaced with existing functionality. Simplify anything that adds no necessary behavior or meaningful clarity. Count identifier types and one test per distinct scenario as necessary: keep them through this pass and through any dedupe or cleanup (Types and inputs; Tests).
 
 ## Modules and interfaces
 
@@ -39,7 +41,7 @@ Use these terms consistently when discussing design:
 
 Preserve project domain vocabulary, including an existing `GLOSSARY.md` or `GLOSSARY-MAP.md`. Use precise technical terms such as HTTP API, service layer, or bounded context for those specific concepts; use module, interface, and seam for the design concepts above.
 
-Your guidelines to follow when designing software, at a high level, are as follows:
+When designing:
 - Reduce what callers must know. Prefer fewer entry points, simpler parameters, and constraints enforced inside the module where this makes the interface easier to use correctly.
 - Keep internal composition behind the interface. A deep module can contain small parts and internal seams for its own tests without exposing them to callers.
 - Apply the **deletion test** before adding an abstraction: if removing it makes complexity vanish, it may be a pass-through; if that complexity reappears across callers, it is earning its keep.
@@ -53,7 +55,7 @@ Apply the shared principles in this file, then read only the references relevant
 
 - **Designing or restructuring a module's interface:** [Module design](references/module-design.md) for evaluating depth, caller knowledge, and seam placement.
 - **Deepening a cluster of modules:** [Deepening](references/deepening.md) for dependency categories, adapter choices, and replacing redundant tests while preserving coverage.
-- **Exploring alternative interfaces:** [Design it twice](references/design-it-twice.md) for comparing substantially different designs. Use this when alternative design exploration is requested, rather than as a routine code-generation step.
+- **Comparing designs:** [Design it twice](references/design-it-twice.md) when the user asks for alternatives, or when an architectural decision is open (a new module, interface, schema, or dependency), as in `delivery`'s shape stage. Code written inside a settled design skips it.
 - **Dart code:** [Dart preferences](references/languages/dart.md) for explicit failure values, Result dependencies, and JSON conversion.
 - **Rust code:** [Rust preferences](references/languages/rust.md) for ownership, identifier wrappers, deserialization, fallible control flow, repeated implementations, error-reporting tools, and focused test coverage.
 - **TypeScript code:** [TypeScript preferences](references/languages/typescript.md) for external data, schema validation, type assertions and guards, variant types, exhaustive switches, object literals, and branded types.
@@ -115,7 +117,7 @@ At the application surface, where a failure is displayed to a user, use contextu
 
 ## Comments
 
-Preserve meaningful context beyond the code's mechanics, especially external commitments and change-sensitive policy values. For example, If customer support guarantees recovery for exactly 30 days, the recovery-window constant's comment should preserve that promise and its exact value so a future editor can see the consequence of changing it. State verified commitments rather than inventing a reason.
+Preserve meaningful context beyond the code's mechanics, especially external commitments and change-sensitive policy values. For example, if customer support guarantees recovery for exactly 30 days, the recovery-window constant's comment should preserve that promise and its exact value so a future editor can see the consequence of changing it. State verified commitments rather than inventing a reason.
 
 ## Tests
 
@@ -124,8 +126,11 @@ Preserve meaningful context beyond the code's mechanics, especially external com
 - Keep those scenarios independently runnable rather than bundling assertions into a table-driven loop that stops at its first failure. Shared fixture helpers are compatible with this preference.
 - When deepening a module, replace tests coupled to removed internals once tests through the new interface protect their meaningful behavior. Preserve coverage of distinct contracts and regressions.
 
-## Refine from review feedback
+## Changing these rules
 
-When the user asks to incorporate a PR correction or another concrete example, update the narrowest applicable rule while retaining its reason, scope, and exceptions.
+Edit these rules when the user asks you to fold a PR correction or a concrete example into them, or when `meditate` applies queued skill feedback. Route every other coding lesson, such as a correction during ordinary work or a miss found by `delivery`'s learn stage, through the `brain` skill's keep test and routing. When you edit, update the narrowest applicable rule, keeping its reason, scope, and exceptions.
 
-Keep shared principles here, substantial design guidance in the design references, language-specific decisions under `references/languages/`, and framework-specific decisions under `references/frameworks/`. Add a reference only when concrete guidance exists, with a conditional read link above. Keep project-only conventions local unless the user adopts them as a personal default.
+- Write each rule so the `adversarial-review` Steward can check a diff against it: the behavior to produce, where it applies, its exceptions, and why.
+- Keep headings stable. Learn names a rule by its file and heading slug (`software-design#named-conditions`, `typescript#exhaustive-switches`), so repeats of one miss group under one name.
+- Keep shared principles here, substantial design guidance in the design references, language-specific decisions under `references/languages/`, and framework-specific decisions under `references/frameworks/`. Add a reference only when concrete guidance exists, with a conditional read link in Read applicable references.
+- Keep project-only conventions in the project's instructions unless the user adopts them as a personal default.
