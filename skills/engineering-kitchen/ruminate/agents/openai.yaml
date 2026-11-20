@@ -1,0 +1,5 @@
+interface:
+  display_name: "Ruminate"
+  short_description: "Mine past T3 threads for uncaptured lessons"
+policy:
+  allow_implicit_invocation: false

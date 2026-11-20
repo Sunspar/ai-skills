@@ -1,0 +1,5 @@
+interface:
+  display_name: "Meditate"
+  short_description: "Audit the brain and apply skill feedback"
+policy:
+  allow_implicit_invocation: false

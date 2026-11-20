@@ -4,6 +4,14 @@ An opinionated collection of reusable agent workflows for software engineering a
 
 The collection favors explicit feedback loops, durable project context, vertical delivery, and clear handoffs between human and agent work.
 
+## Installing and refreshing
+
+Run [`scripts/sync-skill-links.sh`](scripts/sync-skill-links.sh) from the main checkout. It links every top-level skills folder into `~/.agents/skills` for Codex, and every skill into each `~/.claude*/skills/` home for Claude, which reads only one level deep. It also removes links to skills that no longer exist. To refresh after skill changes land, pull first and then run it:
+
+```sh
+git -C ~/workspace/personal/ai-skills pull --ff-only && ~/workspace/personal/ai-skills/scripts/sync-skill-links.sh
+```
+
 ## Choosing and invoking a skill
 
 Skills marked **automatic** describe when an agent may select them from the user's request. Skills marked **explicit** are deliberate commands or orchestrators and are intended to be invoked by name.
@@ -33,6 +41,17 @@ Before using tracker-dependent workflows such as `triage`, `to-spec`, `to-ticket
 | [`code-review`](skills/new/code-review/SKILL.md) · automatic | Reviews changes for correctness, readability, architecture, coding style, security, performance, and test quality. | Reviewing a branch, pull request, or work-in-progress change against its intended behavior and repository rules. | Checks applicable `software-design` preferences and reports clear violations as Required. Independent review axes keep one concern from masking another; it reports findings rather than fixing them. |
 | [`resolving-merge-conflicts`](skills/engineering/resolving-merge-conflicts/SKILL.md) · automatic | Resolves an in-progress merge or rebase by reconstructing both changes' intent, verifying the result, and completing Git state. | Git already has conflicts that must be reconciled without losing either side's purpose. | Better suited than `diagnosing-bugs` to history and intent conflicts, and it carries the operation through to completion. It is intentionally narrow, never invents feature behavior, and its policy is to resolve rather than abort. |
 | [`wizard`](skills/engineering/wizard/SKILL.md) · automatic | Generates a guided Bash wizard for human-only setup, credentials, dashboard work, migrations, or cutovers. | A procedure contains browser or secret-handling steps the agent cannot safely perform itself. | More repeatable and safer than a prose checklist, with confirmation gates and consistent secret handling. It takes scripting effort, still requires a human to run it, and should not replace automation for steps the agent can perform directly. |
+
+## Engineering kitchen skills
+
+The engineering kitchen is the consolidated skill set that replaces the older folders one piece at a time. Each skill has one focus, and no two skills carry the same guidance.
+
+| Skill | Primary function | Use it when | Benefits and tradeoffs |
+| --- | --- | --- | --- |
+| [`brain`](skills/engineering-kitchen/brain/SKILL.md) · automatic | Owns the persistent memory: a repo's `brain/`, the shared private `~/agent-brain`, the keep test, the routing table, and the note and todo formats. | The user asks you to remember something or corrects a recurring approach, a todo is added, or any brain file is edited. | One place decides what is worth keeping and where it goes, so `reflect`, `ruminate`, and `meditate` stay consistent. Every session loads both indexes, so each note has an ongoing cost. |
+| [`reflect`](skills/engineering-kitchen/reflect/SKILL.md) · explicit | Sweeps the current session for lessons and routes each to a check, a note, the skill-feedback queue, or a todo. | Wrapping up a session, especially one with corrections or friction. | Replaces `retro` and applies changes instead of only proposing them. It only sees the current session. |
+| [`ruminate`](skills/engineering-kitchen/ruminate/SKILL.md) · explicit | Mines T3 thread history across Claude and Codex for lessons no session captured. | Periodically, or to bootstrap a brain from existing history. | Finds repeated corrections that single-session `reflect` misses. It needs the T3 tools, costs a subagent per batch, and applies only the findings you approve. |
+| [`meditate`](skills/engineering-kitchen/meditate/SKILL.md) · explicit | Audits and prunes the brain and instruction files, distills principles, and turns queued skill feedback into a skills PR. | Several `reflect` or `ruminate` passes have piled up, or skill feedback is queued. | Keeps the brain lean as it grows. It is the most expensive of the four, and it edits skills only inside `skills/engineering-kitchen/`. |
 
 ## Productivity skills
 
@@ -70,8 +89,10 @@ Start with `wayfinder`. Its decision tickets may use `research`, `prototype`, or
 
 ```text
 skills/
-├── engineering/   # Software design, planning, delivery, review, and operations
-└── productivity/  # Thinking, communication, teaching, and agent-writing workflows
+├── engineering/          # Software design, planning, delivery, review, and operations
+├── engineering-kitchen/  # Consolidated, single-focus skills that replace the older folders
+├── new/                  # Personal delivery and review workflows awaiting consolidation
+└── productivity/         # Thinking, communication, teaching, and agent-writing workflows
 ```
 
 When adding or changing a skill, keep its entry point at `<skill-name>/SKILL.md`, place branch-specific templates and references beside it, and use `writing-for-agents` as the authoring guide.
